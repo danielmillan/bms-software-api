@@ -32,10 +32,10 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - name: list dir
-        run: ls -l
       - name: Install Dependencies
         run: npm install
+      - name: list dir
+        run: ls -l
   test:
     runs-on: ubuntu-20.04
     defaults:
