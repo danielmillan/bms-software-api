@@ -8,6 +8,6 @@ export default {
         storageBucket:functions.config().app.storagebucket,
         messagingSenderId:functions.config().app.messagingsenderid,
         appId:functions.config().app.appid,
-        measurementId:functions.config().app.measurementid
-    }
+        measurementId:functions.config().app.measurementid,
+    },
 }
