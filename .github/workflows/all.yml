@@ -19,18 +19,18 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Restore cache
+      - name: Cache Dependencies
         uses: actions/cache@v2
         env:
           cache-name: nodejs-github-actions
         with:
-          path: ./node_modules
+          path: node_modules
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: npm-${{ env.cache-name }}
       - name: Install Dependencies
         run: npm install
       - name: list dir
-        run: ls -l
+        run: ls -la
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -41,4 +41,4 @@ jobs:
         with:
           node-version: 12.x
       - name: Listar Directorio
-        run: ls -l
+        run: ls -la
