@@ -12,6 +12,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ${{ env.work_directory }}
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 12.x
@@ -27,5 +30,26 @@ jobs:
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: npm-${{ env.cache-name }}
       - name: Install dependencies
-        working-directory: ${{ env.work_directory }}
         run: npm install
+  test:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ${{ env.work_directory }}
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Restore cache
+        uses: actions/cache@v2
+        env:
+          cache-name: nodejs-github-actions
+        with:
+          path: node_modules
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: npm-${{ env.cache-name }}
+      - name: Ejecutar calidad de código
+        run: npm run lint
