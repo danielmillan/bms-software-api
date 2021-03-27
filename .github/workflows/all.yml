@@ -48,5 +48,5 @@ jobs:
           path: node_modules
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: npm-${{ env.cache-name }}
-      - name: Listar Directorio
-        run: ls -la
+      - name: Ejecutar pruebas
+        run: npm run lint
