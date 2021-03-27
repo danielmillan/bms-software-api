@@ -6,15 +6,13 @@ on:
     branches-ignore:
       - "qa"
       - "master"
-env:
-  work_directory: ./functions
+defaults:
+      run:
+        working-directory: ./functions
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
-    defaults:
-      run:
-        working-directory: ${{ env.work_directory }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 12.x
@@ -34,10 +32,7 @@ jobs:
       - name: list dir
         run: ls -l
   test:
-    runs-on: ubuntu-18.04
-    defaults:
-      run:
-        working-directory: ${{ env.work_directory }}
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - uses: actions/checkout@v2
