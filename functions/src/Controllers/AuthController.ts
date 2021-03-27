@@ -3,9 +3,9 @@ import { Request, Response, Router } from 'express';
 const AuthController = Router();
 const rootPath = '/auth';
 
-AuthController.get(`${rootPath}/saludo`, async (request: Request, response: Response) => {
+AuthController.get(`${rootPath}/login`, async (request: Request, response: Response) => {
     //const name = request.params.name;
-    response.status(404).send('No encontrado');
+    response.status(200).send('Servicio de autenticación arriba');
 });
 
 export default AuthController;
