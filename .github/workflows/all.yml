@@ -21,15 +21,18 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Restore cache
+      - name: Cache node modules
         uses: actions/cache@v2
         env:
-          cache-name: nodejs-github-actions
+          cache-name: cache-node-modules
         with:
-          path: node_modules
-          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-          restore-keys: npm-${{ env.cache-name }}
-      - name: Install dependencies
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install Dependencies
         run: npm install
   test:
     runs-on: ubuntu-20.04
@@ -43,13 +46,5 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Restore cache
-        uses: actions/cache@v2
-        env:
-          cache-name: nodejs-github-actions
-        with:
-          path: node_modules
-          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-          restore-keys: npm-${{ env.cache-name }}
       - name: Ejecutar calidad de código
         run: npm run lint
