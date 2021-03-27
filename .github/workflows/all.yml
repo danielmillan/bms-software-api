@@ -27,5 +27,5 @@ jobs:
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: npm-${{ env.cache-name }}
       - name: Install dependencies
-      - working-directory: ${{ env.work_directory }}
+        working-directory: ${{ env.work_directory }}
         run: npm install
