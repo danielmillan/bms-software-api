@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     defaults:
       run:
         working-directory: ${{ env.work_directory }}
@@ -21,23 +21,20 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Cache node modules
+      - name: Restore cache
         uses: actions/cache@v2
         env:
-          cache-name: cache-node-modules
+          cache-name: nodejs-github-actions
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          path: node_modules
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: npm-${{ env.cache-name }}
       - name: Install Dependencies
         run: npm install
       - name: list dir
         run: ls -l
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     defaults:
       run:
         working-directory: ${{ env.work_directory }}
@@ -48,16 +45,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Cache node modules
+      - name: Restore cache
         uses: actions/cache@v2
         env:
-          cache-name: cache-node-modules
+          cache-name: nodejs-github-actions
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: Ejecutar calidad de código
+          path: node_modules
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: npm-${{ env.cache-name }}
+      - name: Listar Directorio
         run: ls -l
