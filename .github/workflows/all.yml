@@ -6,6 +6,8 @@ on:
     branches-ignore:
       - "qa"
       - "master"
+env:
+  work_directory: ./functions
 
 jobs:
   build:
@@ -25,5 +27,5 @@ jobs:
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: npm-${{ env.cache-name }}
       - name: Install dependencies
+      - working-directory: ${{ env.work_directory }}
         run: npm install
-      - run: npm run build
