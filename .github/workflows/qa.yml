@@ -3,6 +3,8 @@ name: QA Action
 on:
   push:
     branches: [ qa ]
+    paths:
+      - 'functions/**'
 
 jobs:
   build:
