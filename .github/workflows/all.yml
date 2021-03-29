@@ -1,4 +1,4 @@
-# All action to implement in Github
+# Generic action to implement in Github
 name: Build an test
 
 on:
@@ -6,10 +6,31 @@ on:
     branches-ignore:
       - "qa"
       - "master"
+    paths:
+      - 'functions/**'
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Cache Dependencies
+        uses: actions/cache@v2
+        env:
+          cache-name: nodejs-github-actions
+        with:
+          path: node_modules
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: npm-${{ env.cache-name }}
+      - name: Install Dependencies
+        run: npm install
+  test:
+    runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 12.x
@@ -24,6 +45,5 @@ jobs:
           path: node_modules
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: npm-${{ env.cache-name }}
-      - name: Install dependencies
-        run: npm install
-      - run: npm run build
+      - name: Execute tests
+        run: npm run lint
