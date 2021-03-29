@@ -45,5 +45,5 @@ jobs:
           path: node_modules
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: npm-${{ env.cache-name }}
-      - name: Execute tests and coverage
+      - name: Execute tests
         run: npm run lint
