@@ -1,4 +1,4 @@
-# All action to implement in Github
+# Generic action to implement in Github
 name: Build an test
 
 on:
