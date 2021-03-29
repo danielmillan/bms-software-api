@@ -62,11 +62,6 @@ jobs:
           path: node_modules
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: npm-${{ env.cache-name }}
-      - name: Restore build folder
-        uses: actions/download-artifact@v2
-        with:
-          name: dist
-          path: dist
       - name: Get firebase env variables
         run: ./node_modules/.bin/firebase functions:config:get --project bms-software
       - name: Deploy firebase hosting
