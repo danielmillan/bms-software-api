@@ -1,0 +1,71 @@
+name: Production Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Cache Dependencies
+      uses: actions/cache@v2
+      env:
+        cache-name: nodejs-github-actions
+      with:
+        path: node_modules
+        key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+        restore-keys: npm-${{ env.cache-name }}
+    - name: Install dependencies
+      run: npm install
+    - run: npm run build
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Restore cache
+        uses: actions/cache@v2
+        env:
+          cache-name: nodejs-github-actions
+        with:
+          path: node_modules
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: npm-${{ env.cache-name }}
+      - name: Execute tests and coverage
+        run: npm run lint
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Restore cache
+        uses: actions/cache@v2
+        env:
+          cache-name: nodejs-github-actions
+        with:
+          path: node_modules
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: npm-${{ env.cache-name }}
+      - name: Restore build folder
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+      - name: Get firebase env variables
+        run: ./node_modules/.bin/firebase functions:config:get --project bms-software
+      - name: Deploy firebase hosting
+        run: ./node_modules/.bin/firebase deploy --token=${{ secrets.FIREBASE_TOKEN }} --only functions --project bms-software
