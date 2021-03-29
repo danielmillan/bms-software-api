@@ -46,6 +46,8 @@ jobs:
           path: node_modules
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: npm-${{ env.cache-name }}
+      - name: List dir
+        run: ls -la
       - name: Execute tests
         run: npm run lint
   deploy:
