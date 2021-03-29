@@ -27,6 +27,8 @@ jobs:
     - name: Install dependencies
       run: npm install
     - run: npm run build
+    - name: List dir
+      run: ls -la
   test:
     runs-on: ubuntu-latest
     needs: build
