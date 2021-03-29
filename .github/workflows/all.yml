@@ -19,8 +19,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Install Dependencies
-        run: npm install
       - name: Cache Dependencies
         uses: actions/cache@v2
         env:
@@ -29,8 +27,8 @@ jobs:
           path: node_modules
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: npm-${{ env.cache-name }}
-      - name: list dir
-        run: ls -la
+      - name: Install Dependencies
+        run: npm install
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -40,13 +38,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Cache Dependencies
+      - name: Restore cache
         uses: actions/cache@v2
         env:
           cache-name: nodejs-github-actions
         with:
           path: node_modules
-          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: npm-${{ env.cache-name }}
-      - name: Ejecutar pruebas
+      - name: Execute tests and coverage
         run: npm run lint
