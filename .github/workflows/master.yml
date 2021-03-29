@@ -3,8 +3,6 @@ name: Production Deploy
 on:
   push:
     branches: [ master ]
-    paths:
-      - 'functions/**'
 defaults:
   run:
     working-directory: ./functions
