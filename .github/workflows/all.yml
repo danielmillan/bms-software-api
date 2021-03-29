@@ -6,9 +6,8 @@ on:
     branches-ignore:
       - "qa"
       - "master"
-defaults:
-      run:
-        working-directory: ./functions
+    paths:
+      - 'functions/**'
 
 jobs:
   build:
