@@ -3,9 +3,11 @@ name: Production Deploy
 on:
   push:
     branches: [ master ]
+env:
+  function-dir: functions
 defaults:
   run:
-    working-directory: ./functions
+    working-directory: ${{ env.function-dir }}
 
 jobs:
   build:
@@ -21,14 +23,17 @@ jobs:
       env:
         cache-name: nodejs-github-actions
       with:
-        path: node_modules
-        key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-        restore-keys: npm-${{ env.cache-name }}
+        path: ${{ env.function-dir }}/node_modules
+        key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}-v1
     - name: Install dependencies
       run: npm install
-    - run: npm run build
-    - name: List dir
-      run: ls -la
+    - name: Prepare Function
+      run: npm run build
+    - name: Share build folder
+      uses: actions/upload-artifact@v1
+      with:
+        name: lib
+        path: ${{ env.lambda-dir }}/lib
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -43,11 +48,8 @@ jobs:
         env:
           cache-name: nodejs-github-actions
         with:
-          path: node_modules
-          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-          restore-keys: npm-${{ env.cache-name }}
-      - name: List dir
-        run: ls -la
+          path: ${{ env.function-dir }}/node_modules
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}-v1
       - name: Execute tests
         run: npm run lint
   deploy:
@@ -64,9 +66,12 @@ jobs:
         env:
           cache-name: nodejs-github-actions
         with:
-          path: node_modules
-          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-          restore-keys: npm-${{ env.cache-name }}
+          path: ${{ env.function-dir }}/node_modules
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}-v1
+      - name: Get build dir
+        uses: actions/download-artifact@v1
+        with:
+          name: lib
       - name: Get firebase env variables
         run: ./node_modules/.bin/firebase functions:config:get --project bms-software
       - name: Deploy firebase hosting
