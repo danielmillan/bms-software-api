@@ -73,6 +73,6 @@ jobs:
         with:
           name: lib
       - name: Get firebase env variables
-        run: ./node_modules/.bin/firebase functions:config:get --project bms-software
+        run: ${{ env.function-dir }}/node_modules/.bin/firebase functions:config:get --project bms-software
       - name: Deploy firebase hosting
-        run: ./node_modules/.bin/firebase deploy --token=${{ secrets.FIREBASE_TOKEN }} --only functions --project bms-software
+        run: ${{ env.function-dir }}/node_modules/.bin/firebase deploy --token=${{ secrets.FIREBASE_TOKEN }} --only functions --project bms-software
