@@ -75,7 +75,7 @@ jobs:
         with:
           name: lib
       - name: list dir
-        run: ls -la
+        run: ls -la ./node_modules
       - name: Get firebase env variables
         run: ./node_modules/.bin/firebase functions:config:get --project bms-software
       - name: Deploy firebase hosting
