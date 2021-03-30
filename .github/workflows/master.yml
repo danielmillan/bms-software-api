@@ -7,7 +7,7 @@ env:
   function-dir: functions
 defaults:
   run:
-    working-directory: ${{ env.function-dir }}
+    working-directory: functions
 
 jobs:
   build:
