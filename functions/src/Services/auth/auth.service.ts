@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import { admin } from "../../utilities/firebase"
 import IAuthModel from "../../Models/IAuthModel";
 
 export default class AuthService {
@@ -13,7 +14,25 @@ export default class AuthService {
             }).catch((error) => {
                 const err = {
                     code: error.code,
+                    status: 401,
                     message: 'Las credenciales son incorrectas, intente de nuevo.',
+                };
+                reject(err);
+            });
+        });
+    }
+
+    public static validateToken(token: string): Promise<any> {
+        return new Promise(async(resolve, reject) => {
+            let result: any;
+            await admin.auth().verifyIdToken(token).then(async (response: any) => {
+                result = { status: 200, data: 'El token ha sido verificado' };
+                resolve(result);
+            }).catch((error) => {
+                const err = {
+                    code: error.code,
+                    status: 500,
+                    message: error.message,
                 };
                 reject(err);
             });

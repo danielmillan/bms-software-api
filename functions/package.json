@@ -3,7 +3,9 @@
   "scripts": {
     "lint": "eslint \"src/**/*\"",
     "build": "tsc",
-    "serve": "npm run build && firebase emulators:start --only functions",
+    "init-functions": "firebase functions:config:get > .runtimeconfig.json",
+    "serve": "npm run init-functions && npm run build && firebase emulators:start --only functions",
+    "dev": "nodemon --watch src -e ts,js --exec npm run serve",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "firebase:target": "firebase functions:config:get --project bms-software",
