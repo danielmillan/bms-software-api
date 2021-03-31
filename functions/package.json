@@ -3,8 +3,8 @@
   "scripts": {
     "lint": "eslint \"src/**/*\"",
     "build": "tsc",
-    "init-functions": "firebase functions:config:get > .runtimeconfig.json --token=1//054GPbrMxDrMrCgYIARAAGAUSNwF-L9IrB0kQyN7svoPWkZxPEyNCpDvOopXukwosplMm8WZ--P2WizyuzjZZYEHjeuEAgUCiNsM",
-    "serve": "npm run init-functions && npm run build && firebase emulators:start --only functions --token=1//054GPbrMxDrMrCgYIARAAGAUSNwF-L9IrB0kQyN7svoPWkZxPEyNCpDvOopXukwosplMm8WZ--P2WizyuzjZZYEHjeuEAgUCiNsM",
+    "init-functions": "firebase functions:config:get > .runtimeconfig.json",
+    "serve": "npm run init-functions && npm run build && firebase emulators:start --only functions",
     "dev": "nodemon --watch src -e ts,js --exec npm run serve",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
