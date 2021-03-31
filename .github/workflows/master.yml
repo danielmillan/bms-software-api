@@ -77,6 +77,6 @@ jobs:
       - name: list dir
         run: ls -la ./node_modules/.bin
       - name: Get firebase env variables
-        run: ./node_modules/.bin/firebase functions:config:get --project bms-software
+        run: npm run firebase:target
       - name: Deploy firebase hosting
-        run: firebase deploy --token=${{ secrets.FIREBASE_TOKEN }} --only functions --project bms-software
+        run: npm run firebase:deploy
