@@ -6,7 +6,8 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "firebase:target": "firebase functions:config:get --project bms-software",
+    "firebase:deploy": "firebase deploy --token=${{ secrets.FIREBASE_TOKEN }} --only functions --project bms-software",
     "logs": "firebase functions:log"
   },
   "engines": {
