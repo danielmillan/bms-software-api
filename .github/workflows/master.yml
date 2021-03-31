@@ -73,6 +73,6 @@ jobs:
         with:
           name: lib
       - name: Get firebase env variables
-        run: ./node_modules/.bin/firebase functions:config:get --project tecnocredit-app
+        run: ./node_modules/.bin/firebase functions:config:get --project bms-software --token=${{ secrets.FIREBASE_TOKEN }}
       - name: Deploy firebase hosting
-        run: ./node_modules/.bin/firebase deploy --only functions --project tecnocredit-app --token="$FIREBASE_TOKEN"
+        run: ./node_modules/.bin/firebase deploy --only functions --project bms-software --token=${{ secrets.FIREBASE_TOKEN }}
