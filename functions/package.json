@@ -8,8 +8,6 @@
     "dev": "nodemon --watch src -e ts,js --exec npm run serve",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "firebase:target": "firebase functions:config:get --project bms-software",
-    "firebase:deploy": "firebase deploy --token=${{ secrets.FIREBASE_TOKEN }} --only functions --project bms-software",
     "logs": "firebase functions:log"
   },
   "engines": {
