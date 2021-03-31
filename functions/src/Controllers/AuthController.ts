@@ -8,7 +8,7 @@ const rootPath = '/auth';
 AuthController.post(`${rootPath}/login`, async (request: Request, response: Response) => {
     const credentials: IAuthModel = {
         email: request.body.email,
-        password: request.body.password
+        password: request.body.password,
     };
     await AuthService.loginUser(credentials).then((result) => {
         response.status(200).send({ status: 'success', data: result.data });

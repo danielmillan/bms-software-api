@@ -5,5 +5,5 @@ const database = admin.firestore();
 
 export {
     admin,
-    database
+    database,
 }
