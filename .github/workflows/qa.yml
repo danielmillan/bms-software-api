@@ -3,8 +3,11 @@ name: QA Action
 on:
   push:
     branches: [ qa ]
-    paths:
-      - 'functions/**'
+env:
+  function-dir: functions
+defaults:
+  run:
+    working-directory: functions
 
 jobs:
   build:
@@ -20,12 +23,12 @@ jobs:
       env:
         cache-name: nodejs-github-actions
       with:
-        path: node_modules
-        key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-        restore-keys: npm-${{ env.cache-name }}
+        path: ${{ env.function-dir }}/node_modules
+        key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}-v1
     - name: Install dependencies
       run: npm install
-    - run: npm run build
+    - name: Prepare Function
+      run: npm run build
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -40,8 +43,7 @@ jobs:
         env:
           cache-name: nodejs-github-actions
         with:
-          path: node_modules
-          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-          restore-keys: npm-${{ env.cache-name }}
-      - name: Execute tests and coverage
+          path: ${{ env.function-dir }}/node_modules
+          key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}-v1
+      - name: Execute tests
         run: npm run lint
