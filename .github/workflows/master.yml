@@ -50,8 +50,6 @@ jobs:
         with:
           path: ${{ env.function-dir }}/node_modules
           key: npm-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}-v1
-      - name: list dir
-        run: ls -la
       - name: Execute tests
         run: npm run lint
   deploy:
@@ -74,9 +72,7 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: lib
-      - name: list dir
-        run: ls -la ./node_modules/.bin
       - name: Get firebase env variables
-        run: npm run firebase:target
+        run: ./node_modules/.bin/firebase functions:config:get --project bms-software --token=${{ secrets.FIREBASE_TOKEN }}
       - name: Deploy firebase hosting
-        run: npm run firebase:deploy
+        run: ./node_modules/.bin/firebase deploy --only functions --project bms-software --token=${{ secrets.FIREBASE_TOKEN }}

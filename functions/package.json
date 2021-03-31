@@ -8,8 +8,6 @@
     "dev": "nodemon --watch src -e ts,js --exec npm run serve",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "firebase:target": "firebase functions:config:get --project bms-software",
-    "firebase:deploy": "firebase deploy --token=${{ secrets.FIREBASE_TOKEN }} --only functions --project bms-software",
     "logs": "firebase functions:log"
   },
   "engines": {
@@ -20,7 +18,8 @@
     "express": "^4.17.1",
     "firebase": "^8.3.1",
     "firebase-admin": "^9.2.0",
-    "firebase-functions": "^3.11.0"
+    "firebase-functions": "^3.11.0",
+    "firebase-tools": "^9.8.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.3",
@@ -30,6 +29,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.22.0",
     "firebase-functions-test": "^0.2.0",
+    "nodemon": "^2.0.7",
     "typescript": "^3.8.0"
   },
   "private": true
