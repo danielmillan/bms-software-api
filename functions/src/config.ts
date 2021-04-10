@@ -10,4 +10,5 @@ export default {
         appId: functions.config().app.appid,
         measurementId: functions.config().app.measurementid,
     },
+    defaultPassword: functions.config().config.defaultpassword,
 }

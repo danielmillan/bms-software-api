@@ -1,5 +1,6 @@
 import * as express from 'express';
 import AuthController from './Controllers/AuthController';
+import UsersController from './Controllers/UsersController';
 
 const app = express();
 app.use(express.json());
@@ -15,5 +16,6 @@ app.use((_, res, next) => {
 
 // Importar todos los controladores
 app.use(AuthController);
+app.use(UsersController);
 
 export default app;
