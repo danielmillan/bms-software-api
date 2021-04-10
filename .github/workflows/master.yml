@@ -72,7 +72,17 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: lib
-      - name: Get firebase env variables
-        run: ./node_modules/.bin/firebase functions:config:get --project bms-software --token=${{ secrets.FIREBASE_TOKEN }}
-      - name: Deploy firebase hosting
-        run: ./node_modules/.bin/firebase deploy --only functions --project bms-software --token=${{ secrets.FIREBASE_TOKEN }}
+      - name: Checkout danielmillan/pipelines-firebase-functions
+        uses: actions/checkout@v2
+        with:
+          repository: danielmillan/pipelines-firebase-functions
+          ref: '1.0.1'
+          token: ${{ secrets.CA_GITHUB_TOKEN }}
+          persist-credentials: false
+          path: ./.github/actions/pipelines-firebase-functions
+      - name: Deploy function
+        uses: ./.github/actions/pipelines-firebase-functions
+        with:
+          firebase-token: ${{ secrets.FIREBASE_TOKEN }}
+          resources-name: lib
+          project-name: bms-software
