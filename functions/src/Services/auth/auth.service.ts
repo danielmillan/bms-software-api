@@ -42,7 +42,7 @@ export default class AuthService {
                 } else {
                     result = {
                         status: 200,
-                        data: userDb.data()
+                        data: userDb.data(),
                     }
                     resolve(result);
                 }
