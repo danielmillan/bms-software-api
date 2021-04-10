@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { admin } from "../../utilities/firebase"
+import { admin, database } from "../../utilities/firebase"
 import IAuthModel from "../../Models/IAuthModel";
 
 export default class AuthService {
@@ -25,6 +25,27 @@ export default class AuthService {
                 resolve(result);
             }).catch((error) => {
                 reject(error);
+            });
+        });
+    }
+    
+    public static async getProfileFromUser(identification: string): Promise<any> {
+        return new Promise(async(resolve, reject) => {
+            let result: any;
+            await database.doc(`/users/${identification}`).get().then(async(userDb) => {
+                if (!userDb.exists) {
+                    result = {
+                        code: 'user/not-exist',
+                        message: 'El usuario no existe.',
+                    };
+                    reject(result);
+                } else {
+                    result = {
+                        status: 200,
+                        data: userDb.data()
+                    }
+                    resolve(result);
+                }
             });
         });
     }

@@ -1,4 +1,5 @@
 import { Request, Response, Router } from 'express';
+import Authorization from '../middlewares/Authorization';
 import IAuthModel from '../Models/IAuthModel';
 import IResponseModel from '../Models/IResponseModel';
 import AuthService from '../Services/auth/auth.service';
@@ -37,6 +38,20 @@ AuthController.post(`${rootPath}/validate`, async (request: Request, response: R
             data: result.data,
         };
         response.status(200).send(responseServer);
+    }).catch((error) => {
+        const responseServer: IResponseModel = {
+            status: 500,
+            code: error.code,
+            data: error.message,
+        };
+        response.status(responseServer.status).send(responseServer);
+    });
+});
+
+AuthController.get(`${rootPath}/account`, [Authorization.validateSession], async (request: Request, response: Response) => {
+    const identificationUser = response.locals.identification;
+    await AuthService.getProfileFromUser(identificationUser).then((data) => {
+        response.status(200).send(data);
     }).catch((error) => {
         const responseServer: IResponseModel = {
             status: 500,
