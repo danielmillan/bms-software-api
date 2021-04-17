@@ -64,7 +64,7 @@ AuthController.get(`${rootPath}/account`, [Authorization.validateSession], async
 
 AuthController.post(`${rootPath}/resetpassword`, async (request: Request, response: Response) => {
     const email = request.body.email;
-    await AuthService.emailResetPassword(email).then((result) => {
+    await AuthService.resetPassword(email).then((result) => {
         const responseServer: IResponseModel = {
             status: 200,
             data: result,

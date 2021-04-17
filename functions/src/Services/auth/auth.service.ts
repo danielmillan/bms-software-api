@@ -50,10 +50,10 @@ export default class AuthService {
         });
     }
 
-    public static emailResetPassword(email: string): Promise<any> {
+    public static resetPassword(email: string): Promise<any> {
         return new Promise(async(resolve, reject) => {
-            await firebase.auth().sendPasswordResetEmail(email).then(async (response: any) => {
-                resolve('El correo de restablecimiento ha sido enviado correctamente');
+            await firebase.auth().sendPasswordResetEmail(email).then(() => {
+                resolve('El correo de restablecimiento ha sido enviado correctamente.');
             }).catch((error) => {
                 reject(error);
             });
