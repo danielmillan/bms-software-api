@@ -14,7 +14,7 @@ RolesController.post(`${rolePath}`, async(request: Request, response: Response) 
         createdAt: new Date().toISOString(),
         createdBy: request.body.createdBy,
         updatedAt: new Date().toISOString(),
-        updatedBy: request.body.updatedBy
+        updatedBy: request.body.updatedBy,
     };
     await RoleService.createRole(role).then((result) => {
         response.status(200).send(result);
@@ -51,7 +51,7 @@ RolesController.put(`${rolePath}/:identification`, async(request: Request, respo
         description: request.body.description,
         modules: request.body.modules,
         updatedAt: new Date().toISOString(),
-        updatedBy: request.body.updatedBy
+        updatedBy: request.body.updatedBy,
     } as IRoleModel;
     await RoleService.editRole(role, roleId).then((data) => {
         const responseServer: IResponseModel = {
