@@ -1,6 +1,7 @@
 import * as express from 'express';
 import AuthController from './Controllers/AuthController';
 import UsersController from './Controllers/UsersController';
+import RolesController from './Controllers/RolesController';
 
 const app = express();
 app.use(express.json());
@@ -17,5 +18,6 @@ app.use((_, res, next) => {
 // Importar todos los controladores
 app.use(AuthController);
 app.use(UsersController);
+app.use(RolesController);
 
 export default app;
