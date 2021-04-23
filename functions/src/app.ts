@@ -1,10 +1,14 @@
 import * as express from 'express';
 import AuthController from './Controllers/AuthController';
 import UsersController from './Controllers/UsersController';
+import AccountController from './Controllers/AccountController';
+import RolesController from './Controllers/RolesController';
+import ModulesController from './Controllers/ModulesController';
+import DepartmentsController from './Controllers/DepartmentsController';
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use((_, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -17,5 +21,9 @@ app.use((_, res, next) => {
 // Importar todos los controladores
 app.use(AuthController);
 app.use(UsersController);
+app.use(AccountController);
+app.use(RolesController);
+app.use(ModulesController);
+app.use(DepartmentsController);
 
 export default app;

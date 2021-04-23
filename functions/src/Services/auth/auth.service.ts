@@ -49,4 +49,14 @@ export default class AuthService {
             });
         });
     }
+
+    public static resetPassword(email: string): Promise<any> {
+        return new Promise(async(resolve, reject) => {
+            await firebase.auth().sendPasswordResetEmail(email).then(() => {
+                resolve('El correo de restablecimiento ha sido enviado correctamente.');
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    }
 }

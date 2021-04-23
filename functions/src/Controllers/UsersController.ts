@@ -5,7 +5,7 @@ import IResponseModel from '../Models/IResponseModel';
 import UserService from '../Services/users/users.service';
 
 const UsersController = Router();
-const userPath = '/user';
+const userPath = '/users';
 
 UsersController.post(`${userPath}`, [Authorization.validateSession], async(request: Request, response: Response) => {
     const user: IUserModel = {
