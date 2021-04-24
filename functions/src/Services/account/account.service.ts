@@ -3,32 +3,39 @@ import { admin, database } from '../../utilities/firebase';
 
 export default class AccountService {
 
-    public static loadProfilePicture(file: any): Promise<any> {
+    public static loadProfilePicture(filePath: any, uid: string, identification: string): Promise<any> {
         return new Promise(async(resolve, reject) => {
-            
-            await admin.storage().bucket().upload(file.filePath, {
+            admin.storage().bucket().upload(filePath, {
+                destination: `profile_pictures/${uid}.png`,
                 resumable: false,
 				metadata: {
 					metadata: {
-						contentType: file.mimetype,
+						contentType: 'image/png',
+                        firebaseStorageDownloadTokens: uid
 					},
 				},
-            }).then(() => {
-                resolve('Imagen de perfil actualizada correctamente');
+            }).then((data) => {
+                let file = data[0];
+                const url = "https://firebasestorage.googleapis.com/v0/b/" + 'bms-software.appspot.com' + "/o/" + encodeURIComponent(file.name) + "?alt=media&token=" + uid;
+                database.doc(`/users/${identification}`).update({ profileUrl: url}).then(() => {
+                    resolve('Imagen de perfil actualizada correctamente.')
+                }).catch((error) => {
+                    reject(error);
+                });
             }).catch((error) => {
                 reject(error);
-            })
+            });
         });
     }
 
     public static getProfile(identification: string): Promise<any> {
         return new Promise(async(resolve, reject) => {
-           await database.doc(`/users/${identification}`).get().then((result) => {
-               const user = result.data();
-               resolve(user);
-           }).catch((error) => {
-            reject(error);
-        });
+            await database.doc(`/users/${identification}`).get().then((result) => {
+                const user = result.data();
+                resolve(user);
+            }).catch((error) => {
+                reject(error);
+            });
         });
     }
 
