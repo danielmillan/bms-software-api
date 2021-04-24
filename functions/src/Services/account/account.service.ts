@@ -11,11 +11,11 @@ export default class AccountService {
 				metadata: {
 					metadata: {
 						contentType: 'image/png',
-                        firebaseStorageDownloadTokens: uid
+                        firebaseStorageDownloadTokens: uid,
 					},
 				},
             }).then((data) => {
-                let file = data[0];
+                const file = data[0];
                 const url = "https://firebasestorage.googleapis.com/v0/b/" + 'bms-software.appspot.com' + "/o/" + encodeURIComponent(file.name) + "?alt=media&token=" + uid;
                 database.doc(`/users/${identification}`).update({ profileUrl: url}).then(() => {
                     resolve('Imagen de perfil actualizada correctamente.')
