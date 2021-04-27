@@ -3,6 +3,7 @@ import AuthController from './Controllers/AuthController';
 import UsersController from './Controllers/UsersController';
 import RolesController from './Controllers/RolesController';
 import DepartmentsController from './Controllers/DepartmentsController';
+import ChargesController from './Controllers/ChargesController'; 
 
 const app = express();
 app.use(express.json());
@@ -21,5 +22,6 @@ app.use(AuthController);
 app.use(UsersController);
 app.use(RolesController);
 app.use(DepartmentsController);
+app.use(ChargesController);
 
 export default app;
