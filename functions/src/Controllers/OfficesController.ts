@@ -1,55 +1,19 @@
 import { Request, Response, Router } from 'express';
-import IResponseModel from '../Models/IResponseModel';
-import IModuleModel from "../Models/IModuleModel";
-import ModulesService from '../Services/modules/modules.service';
 import Authorization from '../middlewares/Authorization';
+import IOfficeModel from '../Models/IOfficeModel';
+import IResponseModel from '../Models/IResponseModel';
+import OfficeService from '../Services/offices/offices.service';
 
-const ModulesController = Router();
-const modulesPath = '/modules';
+const OfficesController = Router();
+const officePath = '/offices';
 
-ModulesController.get(`${modulesPath}`, async(request: Request, response: Response) => {
-    await ModulesService.getModules().then((data) => {
-        const responseServer: IResponseModel = {
-            status: 200,
-            data,
-        };
-        response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
-});
-
-ModulesController.get(`${modulesPath}/menu`, [Authorization.validateSession], async(request: Request, response: Response) => {
-    const identification = response.locals.identification;
-    await ModulesService.getModulesMenu(identification).then((data) => {
-        const responseServer: IResponseModel = {
-            status: 200,
-            data,
-        };
-        response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
-});
-
-ModulesController.post(`${modulesPath}`, async(request: Request, response: Response) => {
-    const module: IModuleModel = {
+OfficesController.post(`${officePath}`, [Authorization.validateSession], async(request: Request, response: Response) => {
+    const office: IOfficeModel = {
         name: request.body.name,
-        description: request.body.description,
-        group: request.body.group,
-        link: request.body.link,
+        address: request.body.address,
+        status: true,
     };
-    await ModulesService.createModule(module).then((data) => {
+    await OfficeService.createOffice(office).then((data) => {
         const responseServer: IResponseModel = {
             status: 200,
             data,
@@ -65,15 +29,31 @@ ModulesController.post(`${modulesPath}`, async(request: Request, response: Respo
     });
 });
 
-ModulesController.put(`${modulesPath}/:identification`, async(request: Request, response: Response) => {
-    const moduleId = request.params.identification;
-    const module: IModuleModel = {
+OfficesController.get(`${officePath}`, [Authorization.validateSession], async(request: Request, response: Response) => {
+    await OfficeService.getOffices().then((data) => {
+        const responseServer: IResponseModel = {
+            status: 200,
+            data,
+        };
+        response.status(200).send(responseServer);
+    }).catch((error) => {
+        const responseServer: IResponseModel = {
+            status: 500,
+            code: error.code,
+            data: error.message,
+        };
+        response.status(500).send(responseServer);
+    });
+});
+
+OfficesController.put(`${officePath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
+    const officeId = request.params.identification;
+    const office: IOfficeModel = {
         name: request.body.name,
-        description: request.body.description,
-        group: request.body.group,
-        link: request.body.link,
+        address: request.body.address,
+        status: request.body.status,
     };
-    await ModulesService.editModule(module, moduleId).then((data) => {
+    await OfficeService.editOffice(office, officeId).then((data) => {
         const responseServer: IResponseModel = {
             status: 200,
             data,
@@ -89,4 +69,22 @@ ModulesController.put(`${modulesPath}/:identification`, async(request: Request, 
     });
 });
 
-export default ModulesController;
+OfficesController.delete(`${officePath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
+    const departmenId = request.params.identification;
+    await OfficeService.deleteOffice(departmenId).then((data) => {
+        const responseServer: IResponseModel = {
+            status: 200,
+            data,
+        };
+        response.status(200).send(responseServer);
+    }).catch((error) => {
+        const responseServer: IResponseModel = {
+            status: 500,
+            code: error.code,
+            data: error.message,
+        };
+        response.status(500).send(responseServer);
+    });
+});
+
+export default OfficesController;

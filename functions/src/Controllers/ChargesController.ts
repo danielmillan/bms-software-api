@@ -1,55 +1,35 @@
 import { Request, Response, Router } from 'express';
 import IResponseModel from '../Models/IResponseModel';
-import IModuleModel from "../Models/IModuleModel";
-import ModulesService from '../Services/modules/modules.service';
 import Authorization from '../middlewares/Authorization';
+import IChargeModel from '../Models/IChargeModel';
+import ChargeService from '../Services/charges/charges.service';
 
-const ModulesController = Router();
-const modulesPath = '/modules';
+const ChargesController = Router();
+const chargePath = '/charges';
 
-ModulesController.get(`${modulesPath}`, async(request: Request, response: Response) => {
-    await ModulesService.getModules().then((data) => {
-        const responseServer: IResponseModel = {
-            status: 200,
-            data,
-        };
-        response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
-});
-
-ModulesController.get(`${modulesPath}/menu`, [Authorization.validateSession], async(request: Request, response: Response) => {
-    const identification = response.locals.identification;
-    await ModulesService.getModulesMenu(identification).then((data) => {
-        const responseServer: IResponseModel = {
-            status: 200,
-            data,
-        };
-        response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
-});
-
-ModulesController.post(`${modulesPath}`, async(request: Request, response: Response) => {
-    const module: IModuleModel = {
+ChargesController.post(`${chargePath}`, [Authorization.validateSession] , async(request: Request, response: Response) => {
+    const charge: IChargeModel = {
         name: request.body.name,
         description: request.body.description,
-        group: request.body.group,
-        link: request.body.link,
+        createdAt: new Date().toISOString(),
+        createdBy: response.locals.identification,
+        updatedAt: new Date().toISOString(),
+        updatedBy: response.locals.identification,
     };
-    await ModulesService.createModule(module).then((data) => {
+    await ChargeService.createCharge(charge).then((result) => {
+        response.status(200).send(result);
+    }).catch((error) => {
+        const responseServer: IResponseModel = {
+            status: 500,
+            code: error.code,
+            data: error.message,
+        };
+        response.status(500).send(responseServer);
+    });
+});
+
+ChargesController.get(`${chargePath}`, [Authorization.validateSession], async(request: Request, response: Response) => {
+    await ChargeService.getCharges().then((data) => {
         const responseServer: IResponseModel = {
             status: 200,
             data,
@@ -65,15 +45,15 @@ ModulesController.post(`${modulesPath}`, async(request: Request, response: Respo
     });
 });
 
-ModulesController.put(`${modulesPath}/:identification`, async(request: Request, response: Response) => {
-    const moduleId = request.params.identification;
-    const module: IModuleModel = {
+ChargesController.put(`${chargePath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
+    const chargeId = request.params.identification;
+    const charge = {
         name: request.body.name,
         description: request.body.description,
-        group: request.body.group,
-        link: request.body.link,
-    };
-    await ModulesService.editModule(module, moduleId).then((data) => {
+        updatedAt: new Date().toISOString(),
+        updatedBy: response.locals.identification,
+    } as IChargeModel;
+    await ChargeService.editCharge(charge, chargeId).then((data) => {
         const responseServer: IResponseModel = {
             status: 200,
             data,
@@ -89,4 +69,22 @@ ModulesController.put(`${modulesPath}/:identification`, async(request: Request, 
     });
 });
 
-export default ModulesController;
+ChargesController.delete(`${chargePath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
+    const chargeId = request.params.identification;
+    await ChargeService.deleteCharge(chargeId).then((data) => {
+        const responseServer: IResponseModel = {
+            status: 200,
+            data,
+        };
+        response.status(200).send(responseServer);
+    }).catch((error) => {
+        const responseServer: IResponseModel = {
+            status: 500,
+            code: error.code,
+            data: error.message,
+        };
+        response.status(500).send(responseServer);
+    });
+});
+
+export default ChargesController;
