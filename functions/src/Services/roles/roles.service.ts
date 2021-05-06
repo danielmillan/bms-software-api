@@ -44,7 +44,7 @@ export default class RoleService {
                 resolve('El rol ha sido actualizado correctamente.');
             }).catch((error: any) => {
                 reject(error);
-            })
+            });
         });
     }
 

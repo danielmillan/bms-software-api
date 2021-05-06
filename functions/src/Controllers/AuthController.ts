@@ -62,6 +62,20 @@ AuthController.get(`${rootPath}/account`, [Authorization.validateSession], async
     });
 });
 
+AuthController.get(`${rootPath}/security`, [Authorization.validateSession], async (request: Request, response: Response) => {
+    const identification = response.locals.identification;
+    await AuthService.getSecurityPermissions(identification).then((data) => {
+        response.status(200).send(data);
+    }).catch((error) => {
+        const responseServer: IResponseModel = {
+            status: 500,
+            code: error.code,
+            data: error.message,
+        };
+        response.status(responseServer.status).send(responseServer);
+    });
+});
+
 AuthController.post(`${rootPath}/resetpassword`, async (request: Request, response: Response) => {
     const email = request.body.email;
     await AuthService.resetPassword(email).then((result) => {
