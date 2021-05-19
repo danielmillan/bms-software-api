@@ -3,6 +3,7 @@ import IResponseModel from '../Models/IResponseModel';
 import Authorization from '../middlewares/Authorization';
 import IRoleModel from '../Models/IRoleModel';
 import RoleService from '../Services/roles/roles.service';
+import { manageError } from '../utilities/ManageError';
 
 const RolesController = Router();
 const rolePath = '/roles';
@@ -17,33 +18,29 @@ RolesController.post(`${rolePath}`, [Authorization.validateSession] , async(requ
         updatedAt: new Date().toISOString(),
         updatedBy: response.locals.identification,
     };
-    await RoleService.createRole(role).then((result) => {
-        response.status(200).send(result);
-    }).catch((error) => {
+    try {
+        const resultService = await RoleService.createRole(role);
         const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
+            status: 200,
+            data: resultService,
         };
-        response.status(500).send(responseServer);
-    });
+        response.status(200).send(responseServer);
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 RolesController.get(`${rolePath}`, [Authorization.validateSession], async(request: Request, response: Response) => {
-    await RoleService.getRoles().then((data) => {
+    try {
+        const resultService = await RoleService.getRoles();
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 RolesController.put(`${rolePath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
@@ -54,38 +51,30 @@ RolesController.put(`${rolePath}/:identification`, [Authorization.validateSessio
         updatedAt: new Date().toISOString(),
         updatedBy: response.locals.identification,
     } as IRoleModel;
-    await RoleService.editRole(role, roleId).then((data) => {
+    try {
+        const resultService = await RoleService.editRole(role, roleId);
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 RolesController.delete(`${rolePath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
     const roleId = request.params.identification;
-    await RoleService.deleteRole(roleId).then((data) => {
+    try {
+        const resultService = await RoleService.deleteRole(roleId);
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 export default RolesController;

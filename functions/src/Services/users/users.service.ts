@@ -38,10 +38,10 @@ export default class UserService {
         });
     }
 
-    public static async getUsers(): Promise<any> {
+    public static async getUsers(userId: string): Promise<any> {
         return new Promise(async(resolve, reject) => {
             const listAdvisors: IUserModel[] = [];
-            await database.collection('users').get().then(async(data) => {
+            await database.collection('users').where('identification', '!=', userId).get().then(async(data) => {
                 data.forEach((doc: any) => {
                     const advisor = doc.data();
                     listAdvisors.push({
