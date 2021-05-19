@@ -3,6 +3,7 @@ import IResponseModel from '../Models/IResponseModel';
 import Authorization from '../middlewares/Authorization';
 import ICollaboratorModel from '../Models/ICollaboratorModel';
 import CollaboratorService from '../Services/collaborators/collaborators.service';
+import { manageError } from '../utilities/ManageError';
 
 const CollaboratorsController = Router();
 const collaboratorPath = '/collaborators';
@@ -12,41 +13,40 @@ CollaboratorsController.post(`${collaboratorPath}`, [Authorization.validateSessi
         identification: request.body.identification,
         names: request.body.names,
         lastNames: request.body.lastNames,
+        birthDate: request.body.birthDate,
+        address: request.body.address,
         email: request.body.email,
         phone: request.body.phone,
         charge: request.body.charge,
+        department: request.body.department,
         createdAt: new Date().toISOString(),
         createdBy: response.locals.identification,
         updatedAt: new Date().toISOString(),
         updatedBy: response.locals.identification,
     };
-    await CollaboratorService.createCollaborator(collaborator).then((result) => {
-        response.status(200).send(result);
-    }).catch((error) => {
+    try {
+        const resultService = await CollaboratorService.createCollaborator(collaborator);
         const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
+            status: 200,
+            data: resultService,
         };
-        response.status(500).send(responseServer);
-    });
+        response.status(200).send(responseServer);
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 CollaboratorsController.get(`${collaboratorPath}`, [Authorization.validateSession], async(request: Request, response: Response) => {
-    await CollaboratorService.getCollaborators().then((data) => {
+    try {
+        const resultService = await CollaboratorService.getCollaborators();
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 CollaboratorsController.put(`${collaboratorPath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
@@ -54,44 +54,39 @@ CollaboratorsController.put(`${collaboratorPath}/:identification`, [Authorizatio
         identification: request.params.identification,
         names: request.body.names,
         lastNames: request.body.lastNames,
+        birthDate: request.body.birthDate,
+        address: request.body.address,
         email: request.body.email,
         phone: request.body.phone,
         charge: request.body.charge,
+        department: request.body.department,
         updatedAt: new Date().toISOString(),
         updatedBy: response.locals.identification,
     } as ICollaboratorModel;
-    await CollaboratorService.editCollaborator(collaborator).then((data) => {
+    try {
+        const resultService = await CollaboratorService.editCollaborator(collaborator);
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);   
+    }
 });
 
 CollaboratorsController.delete(`${collaboratorPath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
     const collaboratorId = request.params.identification;
-    await CollaboratorService.deleteCollaborator(collaboratorId).then((data) => {
+    try {
+        const resultService = await CollaboratorService.deleteCollaborator(collaboratorId);
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 export default CollaboratorsController;

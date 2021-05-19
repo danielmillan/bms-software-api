@@ -3,6 +3,7 @@ import IUserModel from '../Models/IUserModel';
 import Authorization from '../middlewares/Authorization';
 import IResponseModel from '../Models/IResponseModel';
 import UserService from '../Services/users/users.service';
+import { manageError } from '../utilities/ManageError';
 
 const UsersController = Router();
 const userPath = '/users';
@@ -17,59 +18,46 @@ UsersController.post(`${userPath}`, [Authorization.validateSession], async(reque
         role: request.body.role,
         status: true,
     };
-    await UserService.createUser(user).then(async (responseUser) => {
+    try {
+        const resultService = await UserService.createUser(user);
         const responseServer: IResponseModel = {
-            status: responseUser.status,
-            code: responseUser.code,
-            data: responseUser.data,
+            status: 200,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 UsersController.get(`${userPath}`, [Authorization.validateSession], async(request: Request, response: Response) => {
-    await UserService.getUsers().then(async(data) => {
+    const userId = response.locals.identification;
+    try {
+        const resultService = await UserService.getUsers(userId);
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 UsersController.delete(`${userPath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
     const user = {
         identification: request.params.identification,
     } as IUserModel;
-    await UserService.deleteUser(user).then(async (responseUser) => {
+    try {
+        const resultService = await UserService.deleteUser(user);
         const responseServer: IResponseModel = {
-            status: responseUser.status,
-            code: responseUser.code,
-            data: responseUser.data,
+            status: 200,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 UsersController.put(`${userPath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
@@ -81,21 +69,16 @@ UsersController.put(`${userPath}/:identification`, [Authorization.validateSessio
         role: request.body.role,
         status: request.body.status,
     } as IUserModel;
-    await UserService.updateUser(user).then(async (responseUser) => {
+    try {
+        const resultService = await UserService.updateUser(user);
         const responseServer: IResponseModel = {
-            status: responseUser.status,
-            code: responseUser.code,
-            data: responseUser.data,
+            status: 200,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 export default UsersController;

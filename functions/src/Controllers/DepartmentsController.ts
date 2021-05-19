@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 import IDepartmentModel from '../Models/IDepartmentModel';
 import IResponseModel from '../Models/IResponseModel';
 import DepartmentService from '../Services/departments/departments.service';
+import { manageError } from '../utilities/ManageError';
 
 const DepartmentsController = Router();
 const departmentPath = '/departments';
@@ -11,41 +12,31 @@ DepartmentsController.post(`${departmentPath}`, async(request: Request, response
         name: request.body.name,
         description: request.body.description,
         isRoot: request.body.isRoot,
+        departmentRoot: request.body.departmentRoot,
     };
-    if (request.body.departments && department.isRoot) {
-        department.departments = request.body.departments
-    }
-    await DepartmentService.createDepartment(department).then((data) => {
+    try {
+        const resultService = await DepartmentService.createDepartment(department);
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 DepartmentsController.get(`${departmentPath}`, async(request: Request, response: Response) => {
-    await DepartmentService.getDepartments().then((data) => {
+    try {
+        const resultService = await DepartmentService.getDepartments();
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 DepartmentsController.put(`${departmentPath}/:identification`, async(request: Request, response: Response) => {
@@ -54,42 +45,32 @@ DepartmentsController.put(`${departmentPath}/:identification`, async(request: Re
         name: request.body.name,
         description: request.body.description,
         isRoot: request.body.isRoot,
+        departmentRoot: request.body.departmentRoot,
     };
-    if (request.body.departments && department.isRoot) {
-        department.departments = request.body.departments
-    }
-    await DepartmentService.editDepartment(department, departmenId).then((data) => {
+    try {
+        const resultService = await DepartmentService.editDepartment(department, departmenId);
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 DepartmentsController.delete(`${departmentPath}/:identification`, async(request: Request, response: Response) => {
     const departmenId = request.params.identification;
-    await DepartmentService.deleteDepartment(departmenId).then((data) => {
+    try {
+        const resultService = await DepartmentService.deleteDepartment(departmenId);
         const responseServer: IResponseModel = {
             status: 200,
-            data,
+            data: resultService,
         };
         response.status(200).send(responseServer);
-    }).catch((error) => {
-        const responseServer: IResponseModel = {
-            status: 500,
-            code: error.code,
-            data: error.message,
-        };
-        response.status(500).send(responseServer);
-    });
+    } catch (error) {
+        manageError(response, error);
+    }
 });
 
 export default DepartmentsController;

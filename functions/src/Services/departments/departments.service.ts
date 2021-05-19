@@ -24,7 +24,7 @@ export default class DepartmentService {
                         name: role.name,
                         description: role.description,
                         isRoot: role.isRoot,
-                        departments: role.departments,
+                        departmentRoot: role.departmentRoot,
                     } as IDepartmentModel);
                 });
                 resolve(listDepartments);

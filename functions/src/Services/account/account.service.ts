@@ -6,11 +6,11 @@ export default class AccountService {
     public static loadProfilePicture(filePath: any, uid: string, identification: string): Promise<any> {
         return new Promise(async(resolve, reject) => {
             admin.storage().bucket().upload(filePath, {
-                destination: `profile_pictures/${uid}.png`,
+                destination: `profile_pictures/${uid}.jpg`,
                 resumable: false,
 				metadata: {
 					metadata: {
-						contentType: 'image/png',
+						contentType: 'image/jpg',
                         firebaseStorageDownloadTokens: uid,
 					},
 				},
