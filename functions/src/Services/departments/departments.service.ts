@@ -18,13 +18,13 @@ export default class DepartmentService {
             const listDepartments: IDepartmentModel[] = [];
             await database.collection('departments').get().then((data) => {
                 data.forEach((doc: any) => {
-                    const role = doc.data();
+                    const department = doc.data();
                     listDepartments.push({
                         id: doc.id,
-                        name: role.name,
-                        description: role.description,
-                        isRoot: role.isRoot,
-                        departmentRoot: role.departmentRoot,
+                        name: department.name,
+                        description: department.description,
+                        isRoot: department.isRoot,
+                        departmentRoot: department.departmentRoot,
                     } as IDepartmentModel);
                 });
                 resolve(listDepartments);

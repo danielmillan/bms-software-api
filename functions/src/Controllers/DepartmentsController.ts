@@ -1,4 +1,5 @@
 import { Request, Response, Router } from 'express';
+import Authorization from '../middlewares/Authorization';
 import IDepartmentModel from '../Models/IDepartmentModel';
 import IResponseModel from '../Models/IResponseModel';
 import DepartmentService from '../Services/departments/departments.service';
@@ -7,7 +8,7 @@ import { manageError } from '../utilities/ManageError';
 const DepartmentsController = Router();
 const departmentPath = '/departments';
 
-DepartmentsController.post(`${departmentPath}`, async(request: Request, response: Response) => {
+DepartmentsController.post(`${departmentPath}`, [Authorization.validateSession], async(request: Request, response: Response) => {
     const department: IDepartmentModel = {
         name: request.body.name,
         description: request.body.description,
@@ -26,7 +27,7 @@ DepartmentsController.post(`${departmentPath}`, async(request: Request, response
     }
 });
 
-DepartmentsController.get(`${departmentPath}`, async(request: Request, response: Response) => {
+DepartmentsController.get(`${departmentPath}`, [Authorization.validateSession], async(request: Request, response: Response) => {
     try {
         const resultService = await DepartmentService.getDepartments();
         const responseServer: IResponseModel = {
@@ -39,7 +40,7 @@ DepartmentsController.get(`${departmentPath}`, async(request: Request, response:
     }
 });
 
-DepartmentsController.put(`${departmentPath}/:identification`, async(request: Request, response: Response) => {
+DepartmentsController.put(`${departmentPath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
     const departmenId = request.params.identification;
     const department: IDepartmentModel = {
         name: request.body.name,
@@ -59,7 +60,7 @@ DepartmentsController.put(`${departmentPath}/:identification`, async(request: Re
     }
 });
 
-DepartmentsController.delete(`${departmentPath}/:identification`, async(request: Request, response: Response) => {
+DepartmentsController.delete(`${departmentPath}/:identification`, [Authorization.validateSession], async(request: Request, response: Response) => {
     const departmenId = request.params.identification;
     try {
         const resultService = await DepartmentService.deleteDepartment(departmenId);

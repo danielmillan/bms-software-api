@@ -6,11 +6,9 @@ export default class AuthService {
 
     public static async loginUser(data: IAuthModel): Promise<any> {
         return new Promise(async(resolve, reject) => {
-            let result: any;
             await firebase.auth().signInWithEmailAndPassword(data.email, data.password).then(async (response: any) => {
                 const token = await response.user.getIdToken();
-                result = { status: 200, data: token };
-                resolve(result);
+                resolve(token);
             }).catch((error) => {
                 reject(error);
             });
@@ -19,10 +17,8 @@ export default class AuthService {
 
     public static async validateToken(token: string): Promise<any> {
         return new Promise(async(resolve, reject) => {
-            let result: any;
             await admin.auth().verifyIdToken(token).then(async (response: any) => {
-                result = { status: 200, data: 'El token ha sido verificado' };
-                resolve(result);
+                resolve('El token ha sido verificado');
             }).catch((error) => {
                 reject(error);
             });
@@ -40,11 +36,7 @@ export default class AuthService {
                     };
                     reject(result);
                 } else {
-                    result = {
-                        status: 200,
-                        data: userDb.data(),
-                    }
-                    resolve(result);
+                    resolve(userDb.data(),);
                 }
             });
         });

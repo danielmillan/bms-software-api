@@ -17,8 +17,8 @@ export default class CollaboratorService {
                         address: collaborator.address,
                         email: collaborator.email,
                         phone: collaborator.phone,
-                        charge: collaborator.charge,
-                        department: collaborator.department,
+                        personalInfo: collaborator.personalInfo,
+                        jobInfo: collaborator.jobInfo,
                         createdAt: collaborator.createdAt,
                         createdBy: collaborator.createdBy,
                         updatedAt: collaborator.updatedAt,
@@ -44,8 +44,7 @@ export default class CollaboratorService {
                     reject(result);
                 }
                 await database.doc(`collaborators/${collaborator.identification}`).set(collaborator).then(() => {
-                    result = { status: 200, data: `El colaborador con la identificación ${collaborator.identification} ha sido creado correctamente.` };
-                    resolve(result);
+                    resolve(`El colaborador con la identificación ${collaborator.identification} ha sido creado correctamente.`);
                 }).catch((error: any) => {
                     reject(error);
                 });

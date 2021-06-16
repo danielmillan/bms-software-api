@@ -14,6 +14,7 @@ import CollaboratorsController from './Controllers/CollaboratorsController';
 import OfficesController from './Controllers/OfficesController';
 import ModulesController from './Controllers/ModulesController';
 import DepartmentsController from './Controllers/DepartmentsController';
+import ParametersController from './Controllers/ParametersController';
 
 // Init express and firebase
 const firebaseObject = config.firebaseApp;
@@ -36,5 +37,6 @@ app.use(CollaboratorsController);
 app.use(OfficesController);
 app.use(ModulesController);
 app.use(DepartmentsController);
+app.use(ParametersController);
 
 export const api = functions.https.onRequest(app);

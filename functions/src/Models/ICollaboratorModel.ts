@@ -6,10 +6,26 @@ export default interface ICollaboratorModel {
     address: string;
     email: string;
     phone: string;
-    charge: string;
-    department: string;
+    personalInfo: IPersonalInfo;
+    jobInfo: IJobInfo;
     createdAt: string;
     createdBy: string;
     updatedAt: string;
     updatedBy: string;
+}
+
+interface IPersonalInfo {
+    maritalStatus: string;
+    childrenNumber: string;
+    socialsecurity: string;
+    eps: string;
+    pensionFund: string;
+    bankAccountNumber: string;
+}
+
+interface IJobInfo {
+    dateEntry: string;
+    salary: string;
+    department: string;
+    charge: string;
 }
